@@ -1,0 +1,23 @@
+{
+    "name": "SQL Theme",
+    "tokenColors": [
+        {
+            "scope": "comment.block.sql",
+            "settings": {
+                "foreground": "#6A9955"
+            }
+        },
+        {
+            "scope": "keyword.sql",
+            "settings": {
+                "foreground": "#AAAAAA"
+            }
+        },
+        {
+            "scope": "string.sql",
+            "settings": {
+                "foreground": "#CE9178"
+            }
+        }
+    ]
+}

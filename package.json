@@ -1,0 +1,28 @@
+{
+  "name": "go-sql-highlighter",
+  "displayName": "Go SQL highlighter",
+  "description": "Automatically highlight SQL strings contained within your Go project",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "themes": [],
+    "grammars": [
+      {
+        "path": "./syntaxes/go.tmLanguage.json",
+        "scopeName": "sql-string.injection",
+        "injectTo": [
+          "source.go"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.sql": "sql"
+        }
+      }
+    ]
+  }
+}

@@ -10,14 +10,18 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished", "onView", "*"
+    "onStartupFinished",
+    "onView",
+    "*"
   ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "vscode-go-sql.highlightHttp",
-      "title": "Hello World"
-    }]
+    "commands": [
+      {
+        "command": "vscode-go-sql.highlightHttp",
+        "title": "Hello World"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

@@ -1,28 +1,36 @@
 {
-  "name": "go-sql-highlighter",
-  "displayName": "Go SQL highlighter",
-  "description": "Automatically highlight SQL strings contained within your Go project",
+  "name": "vscode-go-sql",
+  "displayName": "vscode-go-sql",
+  "description": "highlighting for sql strings in go",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.54.0"
   },
   "categories": [
-    "Programming Languages"
+    "Other"
   ],
-  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished", "onView", "*"
+  ],
+  "main": "./extension.js",
   "contributes": {
-    "themes": [],
-    "grammars": [
-      {
-        "path": "./syntaxes/go.tmLanguage.json",
-        "scopeName": "sql-string.injection",
-        "injectTo": [
-          "source.go"
-        ],
-        "embeddedLanguages": {
-          "meta.embedded.block.sql": "sql"
-        }
-      }
-    ]
+    "commands": [{
+      "command": "vscode-go-sql.highlightHttp",
+      "title": "Hello World"
+    }]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.54.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8"
   }
 }

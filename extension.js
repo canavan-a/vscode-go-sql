@@ -1,5 +1,14 @@
 const vscode = require('vscode');
 
+//, "QueryRow", "Query"
+const FUNCTION_MATCHES = ['\\.Exec\\(', '\\.Query\\(', '\\.QueryRow\\(', '\\.Prepare\\(', , 'query :=', 'query =']
+
+const SQL_MATCHES = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO', 'DELETE', 'UPDATE',
+    'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'ORDER', 'BY', 'JOIN', 'INNER', 'OUTER', 'LEFT', 'RIGHT',
+    'ON', 'GROUP', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT', 'NOT', 'OR', 'BETWEEN', 'LIKE', 'NULL',
+    'UNION', 'ALL', 'ANY', 'EXISTS', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'ASC', 'DESC', 'AS', 'IN', 'IS', 'SET',];
+
+
 const execSelectDecorationType = vscode.window.createTextEditorDecorationType({
     color: '#87CEEB',
     isWholeLine: false
@@ -54,7 +63,7 @@ function highlightExecSelect() {
 
         // Check if the document language is Go
         if (document.languageId === 'go') {
-            doHighlight(["Exec", "QueryRow", "Query"])
+            doHighlight(FUNCTION_MATCHES)
         } else {
             // Clear decorations if the document is not a Go file
             editor.setDecorations(execSelectDecorationType, []);
@@ -76,7 +85,8 @@ function doHighlight(matches) {
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
 
-        const regexExecSelect = new RegExp(`\\.${match}\\(\\s*(\`[^\\\`]*\`|"(?:[^"\\\\]|\\\\.)*")`, 'g');
+        // const regexExecSelect = new RegExp(`\\.${match}\\(\\s*(\`[^\\\`]*\`|"(?:[^"\\\\]|\\\\.)*")`, 'g');
+        const regexExecSelect = new RegExp(`${match}\\s*(\`[^\\\`]*\`|"(?:[^"\\\\]|\\\\.)*")`, 'g');
 
         let matchExecSelect;
 
@@ -85,13 +95,13 @@ function doHighlight(matches) {
 
             const stringAfterExec = matchExecSelect[1];
 
-            const startPos = document.positionAt(matchExecSelect.index + match.length + 3);
-
-
             let firstIndex = matchExecSelect[0].indexOf("`")
             if (firstIndex == -1) {
                 firstIndex = matchExecSelect[0].indexOf(`"`)
             }
+
+            const startPos = document.positionAt(matchExecSelect.index + firstIndex + 1);
+
             const endPos = document.positionAt(matchExecSelect.index + firstIndex + stringAfterExec.length - 1);
             const range = new vscode.Range(startPos, endPos);
 
@@ -163,7 +173,7 @@ function doHighlight(matches) {
                 return myRanges
             }
 
-            keywordList = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO', 'DELETE']
+            const keywordList = SQL_MATCHES
 
             for (let j = 0; j < keywordList.length; j++) {
 
@@ -191,11 +201,11 @@ function doHighlight(matches) {
 
             specialList = ['$1', '$2', '$3']
             let counter = 1
-            let valid =  true
+            let valid = true
             while (valid) {
 
                 valueString = `$${counter}`
-                
+
                 const r1 = getSpecialRange(valueString)
                 if (r1) {
                     for (let p = 0; p < r1.length; p++) {
@@ -216,15 +226,15 @@ function doHighlight(matches) {
                         }
                     }
                 }
-                else{
+                else {
                     valid = false
                 }
-                counter +=1
+                counter += 1
             }
 
-            
 
-            
+
+
             for (let i = 0; i < preliminaryRanges.length; i++) {
                 let dec = {
                     range: preliminaryRanges[i]
@@ -233,7 +243,6 @@ function doHighlight(matches) {
             }
 
         }
-
 
         editor.setDecorations(execSelectDecorationType, matchesExecSelect)
 

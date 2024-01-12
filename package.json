@@ -11,8 +11,7 @@
   ],
   "activationEvents": [
     "onStartupFinished",
-    "onView",
-    "*"
+    "onView"
   ],
   "main": "./extension.js",
   "contributes": {

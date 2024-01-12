@@ -1,12 +1,17 @@
 const vscode = require('vscode');
 
 const execSelectDecorationType = vscode.window.createTextEditorDecorationType({
-    color: '#FFA500',
+    color: '#87CEEB',
     isWholeLine: false
 });
 
 const testDec = vscode.window.createTextEditorDecorationType({
-    color: '#7FFF00',
+    color: '#98FB98',
+    isWholeLine: false
+});
+
+const specialDec = vscode.window.createTextEditorDecorationType({
+    color: '#4682B4',
     isWholeLine: false
 });
 
@@ -62,9 +67,11 @@ function doHighlight(matches) {
     const document = editor.document;
     const text = document.getText();
 
-    let matchesExecSelect = [];
+    let matchesExecSelect = []
 
     let keywordSelected = []
+
+    let specialSelected = []
 
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
@@ -73,81 +80,166 @@ function doHighlight(matches) {
 
         let matchExecSelect;
 
+
         while ((matchExecSelect = regexExecSelect.exec(text)) !== null) {
+
             const stringAfterExec = matchExecSelect[1];
 
+            const startPos = document.positionAt(matchExecSelect.index + match.length + 3);
 
 
             let firstIndex = matchExecSelect[0].indexOf("`")
             if (firstIndex == -1) {
                 firstIndex = matchExecSelect[0].indexOf(`"`)
             }
-
-
-            function doThing() {
-                let keyword = 'FROM'
-                const loc = findKeyword(stringAfterExec, keyword)
-
-                if (loc) {
-                    let sPos = document.positionAt(matchExecSelect.index + loc + firstIndex)
-                    let ePos = document.positionAt(matchExecSelect.index + loc + keyword.length + firstIndex)
-                    let kRange = new vscode.Range(sPos, ePos);
-                    const kDecoration = {
-                        range: kRange,
-                        hoverMessage: "sql keyword: " + keyword,
-                    }
-                    keywordSelected.push(kDecoration)
-                    return kRange
-                }
-                return null
-            }
-
-            const r1 = doThing()
-
-            console.log("hello")
-
-
-
-            const startPos = document.positionAt(matchExecSelect.index + match.length + 3);
             const endPos = document.positionAt(matchExecSelect.index + firstIndex + stringAfterExec.length - 1);
-
-
             const range = new vscode.Range(startPos, endPos);
 
-            if (r1) {
-                console.log(range.start)
-                console.log("hello")
-                console.log(r1.start)
+
+            const preliminaryRanges = []
+
+            preliminaryRanges.push(range)
 
 
-                const newRanges = subtractRanges(range, r1)
+            function getKeywordRange(keyword) {
 
-                for (let i = 0; i < newRanges.length; i++) {
-                    let dec = {
-                        range: newRanges[i]
-                    }
-                    matchesExecSelect.push(dec)
+                let index = stringAfterExec.indexOf(keyword);
+                if (index == -1) {
+                    return null
+                }
+                const occurrences = []
+                while (index !== -1) {
+                    occurrences.push(index);
+                    index = stringAfterExec.indexOf(keyword, index + 1);
                 }
 
+                const myRanges = []
+
+                for (let i = 0; i < occurrences.length; i++) {
+                    let loc = occurrences[i]
+                    if (loc) {
+                        let sPos = document.positionAt(matchExecSelect.index + loc + firstIndex)
+                        let ePos = document.positionAt(matchExecSelect.index + loc + keyword.length + firstIndex)
+                        let kRange = new vscode.Range(sPos, ePos);
+                        const kDecoration = {
+                            range: kRange,
+                            hoverMessage: "sql keyword: " + keyword,
+                        }
+                        keywordSelected.push(kDecoration)
+                        myRanges.push(kRange)
+                    }
+                }
+                return myRanges
             }
-            else {
-                const decoration = {
-                    range: range,
-                    // hoverMessage: 'SQL statement highlighted',
-                };
 
-                matchesExecSelect.push(decoration);
+            function getSpecialRange(keyword) {
+
+                let index = stringAfterExec.indexOf(keyword);
+                if (index == -1) {
+                    return null
+                }
+                const occurrences = []
+                while (index !== -1) {
+                    occurrences.push(index);
+                    index = stringAfterExec.indexOf(keyword, index + 1);
+                }
+
+                const myRanges = []
+
+                for (let i = 0; i < occurrences.length; i++) {
+                    let loc = occurrences[i]
+                    if (loc) {
+                        let sPos = document.positionAt(matchExecSelect.index + loc + firstIndex)
+                        let ePos = document.positionAt(matchExecSelect.index + loc + keyword.length + firstIndex)
+                        let kRange = new vscode.Range(sPos, ePos);
+                        const kDecoration = {
+                            range: kRange,
+                            hoverMessage: "sql param: " + keyword,
+                        }
+                        specialSelected.push(kDecoration)
+                        myRanges.push(kRange)
+                    }
+                }
+                return myRanges
             }
 
+            keywordList = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO', 'DELETE']
 
-            // console.log(newRanges)
+            for (let j = 0; j < keywordList.length; j++) {
 
+                const r1 = getKeywordRange(keywordList[j])
+                if (r1) {
+                    for (let p = 0; p < r1.length; p++) {
+                        const depth = preliminaryRanges.length
+                        for (let i = 0; i < depth; i++) {
+                            // try to remove range from every 
+                            if (r1[p]) {
+                                const newRanges = subtractRanges(preliminaryRanges[i], r1[p])
+                                if (newRanges.length == 1) {
+                                    preliminaryRanges[i] = newRanges[0]
+                                }
+                                else {
+                                    preliminaryRanges[i] = newRanges[0]
+                                    preliminaryRanges.push(newRanges[1])
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            specialList = ['$1', '$2', '$3']
+            let counter = 1
+            let valid =  true
+            while (valid) {
+
+                valueString = `$${counter}`
+                
+                const r1 = getSpecialRange(valueString)
+                if (r1) {
+                    for (let p = 0; p < r1.length; p++) {
+                        const depth = preliminaryRanges.length
+                        for (let i = 0; i < depth; i++) {
+                            // try to remove range from every 
+                            if (r1[p]) {
+                                const newRanges = subtractRanges(preliminaryRanges[i], r1[p])
+                                if (newRanges.length == 1) {
+                                    preliminaryRanges[i] = newRanges[0]
+                                }
+                                else {
+                                    preliminaryRanges[i] = newRanges[0]
+                                    preliminaryRanges.push(newRanges[1])
+                                }
+
+                            }
+                        }
+                    }
+                }
+                else{
+                    valid = false
+                }
+                counter +=1
+            }
+
+            
+
+            
+            for (let i = 0; i < preliminaryRanges.length; i++) {
+                let dec = {
+                    range: preliminaryRanges[i]
+                }
+                matchesExecSelect.push(dec)
+            }
 
         }
 
 
         editor.setDecorations(execSelectDecorationType, matchesExecSelect)
+
         editor.setDecorations(testDec, keywordSelected)
+
+        editor.setDecorations(specialDec, specialSelected)
 
     }
 

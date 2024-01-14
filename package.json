@@ -1,8 +1,16 @@
 {
   "name": "vscode-go-sql",
-  "displayName": "vscode-go-sql",
-  "description": "highlighting for sql strings in go",
-  "version": "0.0.1",
+  "displayName": "Better Go SQL highlighter extension",
+  "description": "text highlighter for SQL strings in Go",
+  "author": "Aidan Canavan",
+  "publisher": "LunarGen",
+  "license": "MIT",
+  "icon": "img/logo.png",
+  "version": "1.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canavan-a/vscode-go-sql"
+  },
   "engines": {
     "vscode": "^1.54.0"
   },

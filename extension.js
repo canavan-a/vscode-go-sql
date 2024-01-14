@@ -199,7 +199,6 @@ function doHighlight(matches) {
                 }
             }
 
-            specialList = ['$1', '$2', '$3']
             let counter = 1
             let valid = true
             while (valid) {

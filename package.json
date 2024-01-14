@@ -1,6 +1,6 @@
 {
   "name": "vscode-go-sql",
-  "displayName": "Better Go SQL highlighter extension",
+  "displayName": "Velocity SQL for Go",
   "description": "text highlighter for SQL strings in Go",
   "author": "Aidan Canavan",
   "publisher": "LunarGen",

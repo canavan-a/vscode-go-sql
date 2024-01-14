@@ -1,23 +1,30 @@
-# on:
-#   push:
-#     branches:
-#       - main
+name: Publish Extension
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  publish:
+    runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Install Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18.x
-    - run: npm install
-    - run: xvfb-run -a npm test
-      if: runner.os == 'Linux'
-    - run: npm test
-      if: runner.os != 'Linux'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install vsce
+        run: npm install -g vsce
+
+      - name: Package and Publish
+        run: |
+          vsce package
+          vsce publish -p ${{ secrets.VSCE_PAT }}

@@ -27,4 +27,4 @@ jobs:
       - name: Package and Publish
         run: |
           vsce package
-          vsce publish -p ${{ secrets.VSCE_PAT }}
+          vsce publish minor -p ${{ secrets.VSCE_PAT }}

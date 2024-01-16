@@ -3,7 +3,7 @@ const vscode = require('vscode');
 //, "QueryRow", "Query"
 const FUNCTION_MATCHES = ['\\.Exec\\(', '\\.Query\\(', '\\.QueryRow\\(', '\\.Prepare\\(', , 'query :=', 'query =']
 
-const SQL_MATCHES = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO', 'DELETE', 'UPDATE',
+const SQL_MATCHES = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO', 'DELETE', 'UPDATE', 'RETURNING',
     'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'ORDER', 'BY', 'JOIN', 'INNER', 'OUTER', 'LEFT', 'RIGHT',
     'ON', 'GROUP', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT', 'NOT', 'OR', 'BETWEEN', 'LIKE', 'NULL',
     'UNION', 'ALL', 'ANY', 'EXISTS', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'ASC', 'DESC', 'AS', 'IN', 'IS', 'SET',];

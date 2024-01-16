@@ -10,17 +10,17 @@ const SQL_MATCHES = ['FROM', 'SELECT', 'AND', 'VALUES', 'WHERE', 'INSERT', 'INTO
 
 
 const execSelectDecorationType = vscode.window.createTextEditorDecorationType({
-    color: '#87CEEB',
+    // color: '#87CEEB',
     isWholeLine: false
 });
 
 const testDec = vscode.window.createTextEditorDecorationType({
-    color: '#98FB98',
+    color: '#e35117',
     isWholeLine: false
 });
 
 const specialDec = vscode.window.createTextEditorDecorationType({
-    color: '#4682B4',
+    color: '#facd7f',
     isWholeLine: false
 });
 
@@ -105,11 +105,9 @@ function doHighlight(matches) {
             const endPos = document.positionAt(matchExecSelect.index + firstIndex + stringAfterExec.length - 1);
             const range = new vscode.Range(startPos, endPos);
 
-
             const preliminaryRanges = []
 
             preliminaryRanges.push(range)
-
 
             function getKeywordRange(keyword) {
 

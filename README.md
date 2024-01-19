@@ -1,11 +1,19 @@
-# The Official Go-SQL highlighter for VSCode
+# SQL Velocity highlighter for Go in VSCode
 
-Highlighting for SQL statements within Go without the need of manual commenting.
+### Tired of adding "--sql" to highlight your SQL strings in Go??
 
-SQL statements must be contained within one of the database/sql library functions.
+SQL Velocity AUTOMATICALLY detects SQL in your code.
 
-Example:
 
-```db.Exec('SELECT * FROM my_table WHERE')```
+#### Velocity Examples :
+
+1. ```db.Exec('SELECT * FROM my_table WHERE')```
+
+2. ```db.QueryRow('SELECT * FROM my_table WHERE')```
+3. ```db.Query('SELECT * FROM my_table WHERE')```
+4. ```db.Prepare('SELECT * FROM my_table WHERE')```
+5. ```db.QueryRow('SELECT * FROM my_table WHERE')```
+6. ```query := "UPDATE my_table ...."```
+7. ```query = "UPDATE my_table ...."```
 
 

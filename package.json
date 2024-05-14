@@ -6,7 +6,7 @@
   "publisher": "LunarGen",
   "license": "MIT",
   "icon": "img/logo.png",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/canavan-a/vscode-go-sql"
